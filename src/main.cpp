@@ -13,9 +13,11 @@ bool STREAM = true;
 VideoCapture capture("video.avi");
 DetectLane *detect;
 CarControl *car;
+int skipFrame = 1;
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
+
     cv_bridge::CvImagePtr cv_ptr;
     Mat out;
     try
@@ -23,7 +25,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         cv::imshow("View", cv_ptr->image);
         detect->update(cv_ptr->image);
-        car->driverCar(detect->getLeftLane(), detect->getRightLane(), 30);
+        car->driverCar(detect->getLeftLane(), detect->getRightLane(), 50);
     }
     catch (cv_bridge::Exception& e)
     {

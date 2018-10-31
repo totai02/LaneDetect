@@ -5,7 +5,6 @@ int min(int a, int b)
     return a < b ? a : b;
 }
 
-
 int DetectLane::slideThickness = 10;
 int DetectLane::BIRDVIEW_WIDTH = 240;
 int DetectLane::BIRDVIEW_HEIGHT = 320;
@@ -105,7 +104,7 @@ Mat DetectLane::preProcess(const Mat &src)
 
     fillLane(dst);
 
-    imshow("Binary", dst);
+    imshow("Binary", laneInShadow(src));
 
     return dst;
 }
@@ -227,6 +226,8 @@ void DetectLane::detectLeftRight(const vector<vector<Point> > &points)
     int max = -1, max2 = -1;
     Point2i posMax, posMax2;
 
+    memset(pointMap, 0, sizeof pointMap);
+
     for (int i = 0; i < points.size(); i++)
     {
         for (int j = 0; j < points[i].size(); j++)
@@ -234,7 +235,6 @@ void DetectLane::detectLeftRight(const vector<vector<Point> > &points)
             pointMap[i][j] = 1;
             prePoint[i][j] = -1;
             postPoint[i][j] = -1;
-
         }
     }
 
@@ -279,6 +279,8 @@ void DetectLane::detectLeftRight(const vector<vector<Point> > &points)
             }
         }
     }
+
+    if (max == -1) return;
 
     while (max >= 1)
     {
@@ -365,8 +367,8 @@ Mat DetectLane::birdViewTranform(const Mat &src)
     int width = src.size().width;
     int height = src.size().height;
 
-    src_vertices[0] = Point(0, height / 3 + 10);
-    src_vertices[1] = Point(width, height / 3 + 10);
+    src_vertices[0] = Point(0, skyLine);
+    src_vertices[1] = Point(width, skyLine);
     src_vertices[2] = Point(width, height);
     src_vertices[3] = Point(0, height);
 
