@@ -27,20 +27,10 @@ include_directories(
 )
 
 add_library(api_lane_detection
+  src/api_i2c_pwm.cpp
+  src/pca9685.cpp
   src/detectlane.cpp
   src/carcontrol.cpp
-)
-
-add_executable(lane_detect src/main.cpp)
-
-add_dependencies(lane_detect ${catkin_EXPORTED_TARGETS})
-
-target_link_libraries(
-  lane_detect
-  api_lane_detection
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBS}
-  ${Boost_LIBRARIES}
 )
 
 install(TARGETS api_lane_detection ${ADDITIONAL_EXECUTABLES}
@@ -49,8 +39,12 @@ install(TARGETS api_lane_detection ${ADDITIONAL_EXECUTABLES}
    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
-install(DIRECTORY include/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
-  PATTERN ".svn" EXCLUDE
+add_executable(lane_detect src/main.cpp)
+target_link_libraries(
+  lane_detect
+  api_lane_detection
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
+  ${Boost_LIBRARIES}
 )
+add_dependencies(lane_detect ${catkin_EXPORTED_TARGETS})

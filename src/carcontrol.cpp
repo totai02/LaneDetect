@@ -4,11 +4,41 @@ CarControl::CarControl()
 {
     carPos.x = 120;
     carPos.y = 300;
-    steer_publisher = node_obj1.advertise<std_msgs::Float32>("Team1_steerAngle",10);
-    speed_publisher = node_obj2.advertise<std_msgs::Float32>("Team1_speed",10);
+    pca9685 = new PCA9685() ;
+    api_pwm_pca9685_init( pca9685 );
 }
 
 CarControl::~CarControl() {}
+
+
+void CarControl::manual(double &maxSpeed)
+{
+//    if (getkey() == 56)
+//    {
+//        api_set_FORWARD_control(pca9685, maxSpeed);
+//    }
+//    if (getKey() == 50)
+//    {
+//        api_set_REVERSE_control(pca9685, maxSpeed);
+//    }
+//    if (getKey() == 53)
+//    {
+//        api_set_FORWARD_control(pca9685, 0);
+//    }
+//    if (getKey() == 52)
+//    {
+//        api_set_STEERING_control(pca9685, -45.0);
+//    }
+//    if (getKey() == 54)
+//    {
+//        api_set_STEERING_control(pca9685, 45.0);
+//    }
+    if (getkey() == 52)
+    {
+        api_set_FORWARD_control(pca9685, maxSpeed);
+    }
+}
+
 
 float CarControl::errorAngle(const Point &dst)
 {
@@ -42,12 +72,9 @@ void CarControl::driverCar(const vector<Point> &left, const vector<Point> &right
         error = errorAngle(right[i] - Point(laneWidth / 2, 0));
     }
 
-    std_msgs::Float32 angle;
-    std_msgs::Float32 speed;
+//    angle.data = error;
+//    speed.data = velocity;
 
-    angle.data = error;
-    speed.data = velocity;
-
-    steer_publisher.publish(angle);
-    speed_publisher.publish(speed);    
+//    steer_publisher.publish(angle);
+//    speed_publisher.publish(speed);
 } 
