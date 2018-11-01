@@ -13,7 +13,6 @@ bool STREAM = true;
 VideoCapture capture("video.avi");
 DetectLane *detect;
 CarControl *car;
-int skipFrame = 1;
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
