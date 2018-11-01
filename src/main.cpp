@@ -7,12 +7,14 @@
 #include "detectlane.h"
 #include "carcontrol.h"
 
-
 bool STREAM = true;
+bool AUTO_MODE = false;
 
 VideoCapture capture("video.avi");
 DetectLane *detect;
 CarControl *car;
+
+double maxSpeed = 20;
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
@@ -24,7 +26,15 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         cv::imshow("View", cv_ptr->image);
         detect->update(cv_ptr->image);
-        car->driverCar(detect->getLeftLane(), detect->getRightLane(), 50);
+		if (AUTO_MODE)
+		{
+			car->driverCar(detect->getLeftLane(), detect->getRightLane(), 50);
+		}
+		else
+		{
+            car->manual(maxSpeed);
+		}
+        cv::waitKey(1);
     }
     catch (cv_bridge::Exception& e)
     {
@@ -48,7 +58,7 @@ void videoProcess()
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "image_listener");
+    ros::init(argc, argv, "Auto_Car");
     cv::namedWindow("View");
     cv::namedWindow("Binary");
     cv::namedWindow("Threshold");
@@ -63,7 +73,7 @@ int main(int argc, char **argv)
 
         ros::NodeHandle nh;
         image_transport::ImageTransport it(nh);
-        image_transport::Subscriber sub = it.subscribe("Team1_image", 1, imageCallback);
+        image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_raw", 1, imageCallback);
 
         ros::spin();
     } else {

@@ -43,8 +43,6 @@ void DetectLane::update(const Mat &src)
     
     vector<Mat> layers1 = splitLayer(img);
     vector<vector<Point> > points1 = centerRoadSide(layers1);
-    // vector<Mat> layers2 = splitLayer(img, HORIZONTAL);
-    // vector<vector<Point> > points2 = centerRoadSide(layers2, HORIZONTAL);
 
     detectLeftRight(points1);
 
@@ -59,16 +57,6 @@ void DetectLane::update(const Mat &src)
             circle(birdView, points1[i][j], 1, Scalar(0,0,255), 2, 8, 0 );
         }
     }
-
-    // for (int i = 0; i < points2.size(); i++)
-    //  {
-    //     for (int j = 0; j < points2[i].size(); j++)
-    //     {
-    //         circle(birdView, points2[i][j], 1, Scalar(0,255,0), 2, 8, 0 );
-    //     }
-    // }
-
-    // imshow("Debug", birdView);
 
     for (int i = 1; i < leftLane.size(); i++)
     {
@@ -104,7 +92,7 @@ Mat DetectLane::preProcess(const Mat &src)
 
     fillLane(dst);
 
-    imshow("Binary", laneInShadow(src));
+    imshow("Binary", imgThresholded);
 
     return dst;
 }
