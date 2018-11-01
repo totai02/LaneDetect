@@ -1,7 +1,5 @@
 .vscode
-lane_detect.creator
-lane_detect.files
-lane_detect.includes
+lane_detect.*
 
 # Prerequisites
 *.d
